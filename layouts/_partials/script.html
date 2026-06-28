@@ -1,5 +1,6 @@
-{{- $file := printf "%s.js" (hash.XxHash .) -}}
-{{- $resource := resources.FromString $file . -}}
+{{- $inner := templates.Inner . -}}
+{{- $file := printf "%s.js" (hash.XxHash $inner) -}}
+{{- $resource := resources.FromString $file $inner -}}
 {{- $minify := site.Param "cspInlineHashes.minify" -}}
 {{- if (or (eq $minify "always") (and (ne $minify "never") (eq hugo.Environment "production"))) -}}
     {{- $resource = minify $resource -}}

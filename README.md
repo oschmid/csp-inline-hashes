@@ -17,6 +17,7 @@ hugo mod init <path to your repo> # if you haven't already
 hugo mod get github.com/oschmid/csp-inline-hashes
 hugo mod tidy
 ```
+
 ## Configuration
 
 This module uses the following hugo.yaml parameters:
@@ -54,20 +55,21 @@ function printHelloWorld() {
 ```
 replace it with the following:
 ```
-{{- partialCached "script.html"
-    `function printHelloWorld() {
+{{ with partial "script.html" }}
+    function printHelloWorld() {
         console.log("hello world");
-    }` "hello-world.js" -}} <!-- use a unique name ending in .js so you can search for conflicts -->
-{{- partialCached "style.html"
-    `body {
+    }
+{{ end }}
+{{ with partial "style.html"
+    body {
         background-color: red;
-    }` "background-red.css" -}} <!-- use a unique name ending in .css so you can search for conflicts -->
+    }
+ {{ end }}
 ```
-Then where you configure your headers add the following (for Netlify/Cloudflare this would be in `layouts/index.headers`):
+Then where you configure your headers add the following:
 ```
 {{ $scriptHashes := partial "scriptHashes.html" -}}
 {{ $styleHashes := partial "styleHashes.html" -}}
 Content-Security-Policy: script-src-elem {{ $scriptHashes }}; style-src-elem {{ $styleHashes }}
 ```
-See [my website](https://github.com/oschmid/website) for a more extensive example.
-
+See [demo](https://github.com/oschmid/csp-inline-hashes-demo) for a Netlify example.
